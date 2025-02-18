@@ -73,11 +73,21 @@
                     <li class="nav-item">
                         {% if request.user.is_authenticated %}
                             <div class="d-flex justify-content-center align-center">
-                                <a class="nav-link" href="">{{ request.user.first_name }}</a>
-                                <a class="nav-link" href="/logout"><span class="badge badge-danger m-t-1">Logout</span></a>
+                                {% if request.User.first_name %}
+                                    <a class="nav-link" href="">{{ request.user.first_name }}</a>
+                                {% else %}
+                                    <a class="nav-link" href="">{{ request.user.username }}</a>
+                                {% endif %}
+
+                                <a class="nav-link" href="{% url 'account:logout' %}"><span
+                                        class="badge badge-danger m-t-1">Logout</span></a>
                             </div>
                         {% else %}
-                            <a class="nav-link" href="/login">Login</a>
+                            <div class="d-flex justify-content-center align-center">
+                                <a class="nav-link" href="{% url 'account:login' %}">Login</a>
+                                <strong class="nav-link">/</strong>
+                                <a class="nav-link" href="{% url 'account:register' %}">Rgister</a>
+                            </div>
                         {% endif %}
                     </li>
                 </ul>
