@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     #my apps
     'home.apps.HomeAppConfig',
     'account.apps.AccountConfig',
-    'blog.apps.BlogConfig'
+    'blog.apps.BlogConfig',
+    'django_cleanup.apps.CleanupConfig'
 ]
 
 MIDDLEWARE = [
@@ -113,7 +114,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tehran'
 
 USE_I18N = True
 
