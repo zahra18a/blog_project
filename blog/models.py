@@ -35,6 +35,9 @@ class Article(models.Model):
     objects = ArticleManager()
     slug = models.SlugField(max_length=70, unique=True, blank=True)
 
+    class Meta:
+        ordering = ('-created',)
+
     def save(
         self,
         force_insert = ...,
