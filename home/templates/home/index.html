@@ -19,7 +19,7 @@
                                 <div class="meta-category">
                                     <span>{{ article.category.first.title }}</span>
                                 </div>
-                                <a href="{% url 'blog:article_detail' article.slug %}">
+                                <a href="{% url 'blog:article_detail' article.id %}">
                                     <h4>{{ article.get_title_display }}</h4></a>
                                 <ul class="post-info">
                                     <li><a href="#">{{ article.author.username }}</a></li>
@@ -73,7 +73,7 @@
                                     </div>
                                     <div class="down-content">
                                         <span>{{ recent_article.category.first.title }}</span>
-                                        <a href="{% url 'blog:article_detail' recent_article.slug %}"><h4>{{ recent_article.get_title_display }}</h4></a>
+                                        <a href="{% url 'blog:article_detail' recent_article.id %}"><h4>{{ recent_article.get_title_display }}</h4></a>
                                         <ul class="post-info">
                                             <li><a href="#">{{ recent_article.author.username }}</a></li>
                                             <li><a href="#">{{ recent_article.created }}</a></li>
