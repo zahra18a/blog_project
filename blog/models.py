@@ -42,15 +42,26 @@ class Article(models.Model):
     class Meta:
         ordering = ('-created',)
 
-    def save(
-        self,
-        force_insert = ...,
-        force_update = ...,
-        using = ...,
-        update_fields = ...,
-    ):
-        self.slug = slugify(self.title)
-        super(Article, self).save()
+    # def save(
+    #     self,
+    #     force_insert = ...,
+    #     force_update = ...,
+    #     using = ...,
+    #     update_fields = ...,
+    # ):
+    #     self.slug = slugify(self.title)
+    #     super(Article, self).save()
 
     def __str__(self):
         return f"{self.title} - {self.body[:30]}"
+
+
+class Comment(models.Model):
+    article = models.ForeignKey(Article, on_delete=models.CASCADE, related_name='comments')
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, related_name='replies', null=True, blank=True)
+    body = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.body[:30]} - {self.user}"
