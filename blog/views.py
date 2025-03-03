@@ -1,11 +1,16 @@
 from django.shortcuts import render, get_object_or_404
-from blog.models import Article, Category
+from blog.models import Article, Category, Comment
 from django.core.paginator import Paginator
 
 
-def article_detail(request, slug):
-    # article = Article.objects.get(id=pk)
-    article = get_object_or_404(Article,slug=slug)
+def article_detail(request, pk):
+    article = Article.objects.get(id=pk)
+    # article = get_object_or_404(Article,slug=slug)
+    if request.method == 'POST':
+        parent_id = request.POST.get('parent_id')
+        body = request.POST.get('body')
+        Comment.objects.create(body=body, article=article, user=request.user, parent_id=parent_id)
+
     return render(request, 'blog/article-details.html', context={'article': article})
 
 def article_list(request):
