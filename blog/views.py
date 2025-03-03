@@ -25,3 +25,19 @@ def category_detail(request, pk=None):
     # articles = category.article_set.all()
     articles=category.articles.all() #با کمک related_name اوردیم بجای خط بالا
     return render(request, 'blog/article_list.html', context={'articles': articles})
+
+
+
+def search(request):
+    q=request.GET.get('q')
+    title_map = {
+        'پایتون': 'A',
+        'جنگو': 'B'
+    }
+
+    q_translated = title_map.get(q, q)
+    articles = Article.objects.filter(title__icontains=q_translated)
+    page_number = request.GET.get('page')
+    paginator = Paginator(articles, 2)
+    object_list = paginator.get_page(page_number)
+    return render(request, 'blog/article_list.html', context={'articles': object_list})
