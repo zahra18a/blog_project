@@ -1,5 +1,6 @@
 from django import forms
 from django.contrib.auth import authenticate
+from django.contrib.auth.models import User
 from django.forms import ValidationError
 
 
@@ -23,3 +24,9 @@ class LoginForm(forms.Form):
                 raise ValidationError('نام کاربری یا رمز عبور اشتباه است.', code='invalid_info')
 
         return cleaned_data
+
+
+class UserEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('first_name','last_name', 'email')

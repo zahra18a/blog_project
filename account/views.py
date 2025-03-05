@@ -1,8 +1,9 @@
+from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render,redirect
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import  login, logout
 
-from account.forms import LoginForm
+from account.forms import LoginForm, UserEditForm
 
 
 def user_login(request):
@@ -39,6 +40,17 @@ def user_register(request):
         return redirect('home:main')
     return render(request, 'account/register.html', context={})
 
+
+def user_edit(request):
+    if not request.user.is_authenticated:
+        return redirect('account:login')
+    user = request.user
+    form = UserEditForm(instance=user)
+    if request.method =='POST':
+        form = UserEditForm(instance=user, data=request.POST)
+        if form.is_valid():
+            form.save()
+    return render(request, 'account/edit_info.html',{'form':form})
 def user_logout(request):
     logout(request)
     return redirect('home:main')
