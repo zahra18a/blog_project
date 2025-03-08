@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load filters %}
+{% load my_template_tags %}
 {% load social_share %}
 {% block title %}
     home
@@ -42,8 +44,8 @@
                     <div class="main-content">
                         <div class="row">
                             <div class="col-lg-8">
-                                <span>Stand Blog HTML5 Template</span>
-                                <h4>Creative HTML Template For Bloggers!</h4>
+                                <span>{% current_time "%Y-%m-%d" %}</span>
+                                <h4>{% show_result 'test inclusion tags' %}</h4>
                             </div>
                             <div class="col-lg-4">
                                 <div class="main-button">
@@ -79,7 +81,7 @@
                                             <li><a href="#">{{ recent_article.created }}</a></li>
                                             <li><a href="#">12 Comments</a></li>
                                         </ul>
-                                        <p>{{ recent_article.body }}</p>
+                                        <p>{{ recent_article.body|cutter:30 }}</p>
                                         <div class="post-options">
                                             <div class="row">
                                                 <div class="col-6">
