@@ -1,16 +1,23 @@
+from tabnanny import verbose
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
+from django.utils.html import format_html
 from django.utils.text import slugify
 from  django.urls import reverse
 
 
 class Category(models.Model):
-    title = models.CharField(max_length=100)
-    created = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=100, verbose_name='عنوان')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = "دسته بندی"
+        verbose_name_plural = "دسته بندی ها"
 
 
 class ArticleManager(models.Manager):
@@ -25,22 +32,30 @@ class Article(models.Model):
         ('A','پایتون'),
         ('B', 'جنگو')
     )
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles')
-    title = models.CharField(max_length=70, choices = CHOICES, default='A')
-    category = models.ManyToManyField(Category, related_name='articles')
-    body = models.TextField()
-    image = models.ImageField(upload_to='images/articles')
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
-    pub_date = models.DateField(default=timezone.now)
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name='articles', verbose_name='نویسنده ی مقالات')
+    title = models.CharField(max_length=70, choices = CHOICES, default='A', verbose_name='عنوان')
+    category = models.ManyToManyField(Category, related_name='articles', verbose_name='دسته بندی')
+    body = models.TextField(verbose_name='متن')
+    image = models.ImageField(upload_to='images/articles', verbose_name='تصویر')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='تاریخ ایجاد')
+    updated = models.DateTimeField(auto_now=True, verbose_name='تاریخ بروزرسانی',)
+    pub_date = models.DateField(default=timezone.now, verbose_name='تاریخ انتشار')
     objects = ArticleManager()
     slug = models.SlugField(max_length=70, unique=True, blank=True)
 
     def get_absolute_url(self):
         return reverse('blog:article_detail', args=[self.id])
 
+
+    def show_image(self):
+        if self.image:
+            return format_html(f'<img src="{self.image.url}" width="100" height="100" />')
+        return format_html(f'<p style="color:red">تصویر ندارد</p>')
+
     class Meta:
         ordering = ('-created',)
+        verbose_name = 'مقاله'
+        verbose_name_plural ='مقالات'
 
     # def save(
     #     self,
@@ -66,6 +81,10 @@ class Comment(models.Model):
     def __str__(self):
         return f"{self.body[:30]} - {self.user}"
 
+    class Meta:
+        verbose_name = 'کامنت'
+        verbose_name_plural = 'کامنت ها'
+
 
 
 class Message(models.Model):
@@ -77,3 +96,7 @@ class Message(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        verbose_name = 'پیام'
+        verbose_name_plural ='پیام ها'
