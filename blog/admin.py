@@ -22,7 +22,7 @@ class ArticleAdmin(admin.ModelAdmin):
     list_editable = ('title',)
     list_filter = ('pub_date','created',FilterByTitle)
     search_fields = ('title','body')
-    fields = ('image','title', 'body')
+    # fields = ('image','title', 'body')
 
     def short_body(self, obj):
         return Truncator(obj.body).chars(50)
@@ -33,3 +33,4 @@ class ArticleAdmin(admin.ModelAdmin):
 admin.site.register(models.Category)
 admin.site.register(models.Comment)
 admin.site.register(models.Message)
+admin.site.register(models.Like)

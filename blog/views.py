@@ -1,19 +1,24 @@
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.core.paginator import Paginator
 
 from blog.forms import ContactUsForm, MessageForm
-from blog.models import Article, Category, Comment, Message
+from blog.models import Article, Category, Comment, Message, Like
 
 
 def article_detail(request, pk):
     article = Article.objects.get(id=pk)
     # article = get_object_or_404(Article,slug=slug)
+
+    user_like = None
+    if request.user.is_authenticated:
+        is_like = Like.objects.filter(article__slug=article.slug, user_id=request.user.id).exists()
     if request.method == 'POST':
         parent_id = request.POST.get('parent_id')
         body = request.POST.get('body')
         Comment.objects.create(body=body, article=article, user=request.user, parent_id=parent_id)
 
-    return render(request, 'blog/article-details.html', context={'article': article})
+    return render(request, 'blog/article-details.html', context={'article': article, 'is_like': is_like})
 
 
 def article_list(request):
@@ -62,3 +67,13 @@ def contact_us(request):
     else:
         form = MessageForm()
     return render(request, 'blog/contact_us.html', {'form': form})
+
+
+def like(request, slug, pk):
+    try:
+        like = Like.objects.get(article__slug = slug, user_id = request.user.id)
+        like.delete()
+        return JsonResponse({'response': 'unliked'})
+    except:
+        Like.objects.create(article_id=pk, user_id =request.user.id)
+        return JsonResponse({'response': 'liked'})
